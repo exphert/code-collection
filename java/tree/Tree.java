@@ -117,7 +117,7 @@ public class Tree {
             Utils.clear();
             Utils.banner(true);
             Utils.printTree(root, "", true);
-            Utils.menu("onlyMenu", new String[]{",,add:Add Child",",,del:Delete Child","s,Simpan", "x,Kembali"});
+            Utils.menu("onlyMenu", new String[]{",,add:<Add Child>",",,del:<Delete Child>","s,Simpan", "x,Kembali"});
             try {
                 String pilihan = Utils.input("Tree Child");
 
@@ -229,7 +229,7 @@ class Utils {
         for (String part : parts) {
             TreeNode childNode = currentNode.findChild(part);
 
-            if (childNode == null) {
+            if (childNode == null && !part.trim().isEmpty()) {
                 // Create new child node if it doesn't exist
                 childNode = new TreeNode(part);
                 currentNode.addChild(childNode);
@@ -325,9 +325,20 @@ class Utils {
     }
 
     public static void clear() {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
-    }
+		try {
+			String osName = System.getProperty("os.name").toLowerCase();
+			if (osName.contains("windows")) {
+				// For Windows, use a workaround since 'cls' doesn't work directly in Java
+				new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+			} else {
+				// For Unix-based systems
+				new ProcessBuilder("clear").inheritIO().start().waitFor();
+			}
+		} catch (IOException | InterruptedException e) {
+			// Handle exceptions gracefully
+			System.out.println("Error clearing the screen: " + e.getMessage());
+		}
+	}
 
     public static void banner(Boolean standalone) {
 
