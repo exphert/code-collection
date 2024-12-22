@@ -1,19 +1,12 @@
 /*
- * Code by Surya H.S - Not Optimized
+ * Original Code by Surya H.S <github.com/erozx>
  * Tree Structure Visualization with Java
  */
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
-public class TreeUnoptimized {
+public class Tree {
 
     public static void main(String[] args) {
 
@@ -389,30 +382,6 @@ class Utils {
         }
 
         println("├────────────────────────────────┘");
-    }
-
-    public static void color(String color) {
-        switch (color) {
-            case "B" ->
-                print("\033[31m"); // Black
-            case "W" ->
-                print("\033[37m"); // White
-            case "r" ->
-                print("\033[31m"); // Red
-            case "g" ->
-                print("\033[32m"); // Green
-            case "y" ->
-                print("\033[33m"); // Yellow
-            case "b" ->
-                print("\033[34m"); // Blue
-            case "m" ->
-                print("\033[35m"); // Magenta
-            case "c" ->
-                print("\033[36m"); // Cyan
-            default ->
-                print("\033[0m");
-        }
-
     }
 
 }
