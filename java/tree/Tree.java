@@ -1,5 +1,5 @@
 /*
- * Original Code by Surya H.S <github.com/erozx>
+ * Original Code by Surya H.S <https://github.com/erozx/code-collection/tree/main/java/tree>
  * Tree Structure Visualization with Java
  */
 
@@ -11,276 +11,323 @@ public class Tree {
     public static void main(String[] args) {
 
         while (true) {
-            Utils.clear();
-            Utils.menu(" Menu Utama", new String[]{"Buat Struktur Tree", "Load Struktur Tree", "0,Keluar"});
-            try {
-                int pilihan = Integer.parseInt(Utils.input("Pilih opsi"));
-                switch (pilihan) {
-                    case 1 -> StructureTree(false, null);
-                    case 2 -> {
-                        String pass = "not";
-                        int loadTree = -1;
-                        String[] treeList;
+			// Membersihkan layar dan menampilkan menu utama
+			Utils.clear();
+			Utils.menu(" Menu Utama", new String[]{"Buat Struktur Tree", "Load Struktur Tree", "0,Keluar"});
 
-                        do {
-                            // Get the list of tree files
-                            treeList = Utils.directory(new File("data"));
+			try {
+				// Meminta input pilihan dari pengguna
+				int pilihan = Integer.parseInt(Utils.input("Pilih opsi"));
 
-                            // Create menu options
-                            String[] menuOptions;
-                            if (treeList.length == 0) {
-                                menuOptions = new String[]{"0,Kembali"};
-                            } else {
-                                menuOptions = new String[treeList.length + 1];
-                                System.arraycopy(treeList, 0, menuOptions, 0, treeList.length);
-                                menuOptions[treeList.length] = "0,Kembali";
-                            }
+				switch (pilihan) {
+					case 1 -> StructureTree(false, null); // Opsi untuk membuat struktur tree baru
 
-                            // Display menu
-                            Utils.clear();
-                            Utils.menu(" List Tree", menuOptions);
+					case 2 -> {
+						String pass = "not";
+						int loadTree = -1;
+						String[] treeList;
 
-                            // Get user input
-                            try {
-                                loadTree = Integer.parseInt(Utils.input("Pilih"));
+						do {
+							// Mendapatkan daftar file tree dari direktori "data"
+							treeList = Utils.directory(new File("data"));
 
-                                if (loadTree == 0) {
-                                    pass = "ok";
-                                } else if (loadTree > 0 && loadTree <= treeList.length) {
-                                    pass = "ok"; // Allow valid selection
-                                } else {
-                                    // Utils.println("Opsi tidak valid. Silakan coba lagi.");
-                                }
-                            } catch (NumberFormatException e) {
-                                // Utils.println("Input tidak valid. Harap masukkan angka.");
-                            }
-                        } while (!pass.equals("ok"));
+							// Menyiapkan opsi menu berdasarkan file tree yang tersedia
+							String[] menuOptions;
+							if (treeList.length == 0) {
+								menuOptions = new String[]{"0,Kembali"}; // Jika tidak ada file
+							} else {
+								menuOptions = new String[treeList.length + 1];
+								System.arraycopy(treeList, 0, menuOptions, 0, treeList.length);
+								menuOptions[treeList.length] = "0,Kembali"; // Tambahkan opsi kembali
+							}
 
-                        if (loadTree > 0 && loadTree <= treeList.length) {
-                            // Load the selected tree
-                            File file = new File("data/" + treeList[loadTree - 1]); // Ensure correct path
-                            List<String> lines = Utils.readLinesFromFile(file);
-                            StructureTree(true, lines);
-                        }
-                    }
-                    case 0 -> {
-                        Utils.clear();
-                        Utils.banner(true);
-                        Utils.println("──────Thanks─Makasih─Arigatou─────");
-                        Utils.println(":)");
-                        System.exit(0);
-                    }
-                    default -> Utils.println("Opsi tidak valid. Coba lagi.");
-                }
-            } catch (NumberFormatException e) {
-                Utils.println("Input tidak valid. Harap masukkan angka.");
-            }
-        }
-    }
+							// Membersihkan layar dan menampilkan menu daftar tree
+							Utils.clear();
+							Utils.menu(" List Tree", menuOptions);
+
+							try {
+								// Meminta input pilihan file tree
+								loadTree = Integer.parseInt(Utils.input("Pilih"));
+
+								if (loadTree == 0) {
+									pass = "ok"; // Kembali ke menu utama
+								} else if (loadTree > 0 && loadTree <= treeList.length) {
+									pass = "ok"; // File valid, lanjutkan proses
+								} else {
+									Utils.println("Opsi tidak valid. Silakan coba lagi.");
+								}
+
+							} catch (NumberFormatException e) {
+								Utils.println("Input tidak valid. Harap masukkan angka.");
+							}
+						} while (!pass.equals("ok")); // Ulangi sampai input valid
+
+						// Jika file valid dipilih, baca file dan tampilkan struktur tree
+						if (loadTree > 0 && loadTree <= treeList.length) {
+							File file = new File("data/" + treeList[loadTree - 1]);
+							List<String> lines = Utils.readLinesFromFile(file);
+							StructureTree(true, lines);
+						}
+					}
+
+					case 0 -> {
+						// Keluar dari program
+						Utils.clear();
+						Utils.banner(true);
+						Utils.println("─────Thanks─Makasih─Arigatou──────");
+						Utils.println("        <github.com/erozx>");
+						System.exit(0);
+					}
+
+					default -> Utils.println("Opsi tidak valid. Coba lagi."); // Jika input tidak valid
+				}
+
+			} catch (NumberFormatException e) {
+				Utils.println("Input tidak valid. Harap masukkan angka."); // Jika input bukan angka
+			}
+		}
+	}
 
     public static void StructureTree(Boolean isLoad, List<String> list) {
-        Utils.clear();
+		Utils.clear();
 
-        // Get the root name only if it's not loading
-        String rootTree;
-        TreeNode root;
+		String rootTree;
+		TreeNode root;
 
-        if (isLoad) {
-            // If loading, create root node based on the first element in the list
-            rootTree = list.get(0).split(">")[0].strip(); // Assuming the first element is the root name
-            root = new TreeNode(rootTree); // Extract and set the root node
+		// Jika tree diload dari file
+		if (isLoad) {
+			rootTree = list.get(0).split(">")[0].strip(); // Ambil nama root tree
+			root = new TreeNode(rootTree);
 
-            for (int idx = 0; idx < list.size(); idx++) {
-                // Remove the root part of the path and split remaining path by ">"
-                String[] parts = list.get(idx).substring(rootTree.split(">")[0].length() + 1).split(">");
-                Utils.addNode(root, parts);
-            }
-        } else {
-            // If creating new structure
-            while(true){
-                Utils.clear();
-                Utils.menu("Buat Struktur Tree", new String[]{"x,Kembali"});
-                rootTree = Utils.input("Root Tree");
+			// Tambahkan node ke tree berdasarkan file
+			for (int idx = 0; idx < list.size(); idx++) {
+				String[] parts = list.get(idx).substring(rootTree.split(">")[0].length() + 1).split(">");
+				Utils.addNode(root, parts);
+			}
+		} else {
+			// Jika tree dibuat baru
+			while (true) {
+				Utils.clear();
+				Utils.menu("Buat Struktur Tree", new String[]{"x,Kembali"});
+				rootTree = Utils.input("Root Tree");
 
-                if ("x".equals(rootTree)) {
-                    return; // Exit if the user chose to go back
-                }
+				if ("x".equals(rootTree)) { // Kembali jika input 'x'
+					return;
+				}
 
-                if(!rootTree.isEmpty()){
-                    break;
-                }
-            }
-            root = new TreeNode(rootTree);
-        }
+				if (!rootTree.isEmpty()) { // Pastikan root tree tidak kosong
+					break;
+				}
+			}
+			root = new TreeNode(rootTree); // Inisialisasi root tree
+		}
 
-        while (true) {
-            Utils.clear();
-            Utils.banner(true);
-            Utils.printTree(root, "", true);
-            Utils.menu("onlyMenu", new String[]{",,add:<Add Child>",",,del:<Delete Child>","s,Simpan", "x,Kembali"});
-            try {
-                String pilihan = Utils.input("Tree Child");
+		// Menu utama untuk manipulasi tree
+		while (true) {
+			Utils.clear();
+			Utils.banner(true);
+			Utils.printTree(root, "", true); // Tampilkan tree
+			Utils.menu("onlyMenu", new String[]{",,add:<Add Branch>", ",,del:<Delete Branch>", ",,clr:<Clear Branch>", "s,Simpan", "x,Kembali"});
 
-                if (pilihan.startsWith("add:")) {
-                    String[] parts = pilihan.substring(4).split(">");
-                    Utils.addNode(root, parts);
-                } else if (pilihan.startsWith("del:")) {
-                    String[] parts = pilihan.substring(4).split(">");
-                    Utils.deleteNode(root, parts);
-                }
+			try {
+				String pilihan = Utils.input("Tree Branch");
 
-                switch (pilihan) {
-                    case "s" -> {
-                        String filenames = rootTree.strip().replace(" ", "-").toLowerCase().replace(".tree", "");
-                        List<String> treeArray = new ArrayList<>();
-                        Utils.saveTreeToFlatFile(root, treeArray, "");
-                        try (BufferedWriter writer = new BufferedWriter(new FileWriter("data/" + filenames + ".tree"))) {
-                            for (String line : treeArray) {
-                                writer.write(line);
-                                writer.newLine();
-                            }
-                            Utils.println("Struktur Tree berhasil disimpan [" + filenames + ".tree]!");
-                        } catch (IOException e) {
-                            Utils.println("Gagal menyimpan tree: " + e.getMessage());
-                        }
-                        Utils.input("Enter");
-                    }
-                    case "x" -> {
-                        Utils.println("Kembali ke menu utama...");
-                        return; // Exit the function to return to the main menu
-                    }
-                    default -> Utils.println("Opsi tidak valid. Coba lagi.");
-                }
-            } catch (NumberFormatException e) {
-                Utils.println("Input tidak valid. Harap masukkan angka.");
-            }
-        }
-    }
+				// Menambahkan branch ke tree
+				if (pilihan.startsWith("add:")) {
+					String[] parts = pilihan.substring(4).split(">");
+					Utils.addNode(root, parts);
+				}
+				// Menghapus branch dari tree
+				else if (pilihan.startsWith("del:")) {
+					String[] parts = pilihan.substring(4).split(">");
+					Utils.deleteNode(root, parts);
+				}
+				// Membersihkan isi branch tanpa menghapus branch itu sendiri
+				else if (pilihan.startsWith("clr:")) {
+					String[] parts = pilihan.substring(4).split(">");
+					Utils.clearNode(root, parts);
+				}
 
+				switch (pilihan) {
+					case "s" -> {
+						// Simpan struktur tree ke file
+						String filenames = rootTree.strip().replace(" ", "-").toLowerCase().replace(".tree", "");
+						List<String> treeArray = new ArrayList<>();
+						Utils.saveTreeToFlatFile(root, treeArray, "");
+
+						try (BufferedWriter writer = new BufferedWriter(new FileWriter("data/" + filenames + ".tree"))) {
+							for (String line : treeArray) {
+								writer.write(line);
+								writer.newLine();
+							}
+							Utils.println("Struktur Tree berhasil disimpan [" + filenames + ".tree]!");
+						} catch (IOException e) {
+							Utils.println("Gagal menyimpan tree: " + e.getMessage());
+						}
+						Utils.input("Enter"); // Tunggu input sebelum lanjut
+					}
+					case "x" -> {
+						// Kembali ke menu utama
+						Utils.println("Kembali ke menu utama...");
+						return;
+					}
+					default -> Utils.println("Opsi tidak valid. Coba lagi.");
+				}
+			} catch (NumberFormatException e) {
+				Utils.println("Input tidak valid. Harap masukkan angka.");
+			}
+		}
+	}
 }
 
+// Kelas TreeNode digunakan untuk merepresentasikan node dalam struktur tree
 class TreeNode {
-    private final String name;
-    private final List<TreeNode> children;
+    private final String name; // Nama dari node
+    private final List<TreeNode> branches; // Daftar cabang (children) dari node ini
 
+    // Konstruktor untuk membuat node baru dengan nama tertentu
     public TreeNode(String name) {
         this.name = name;
-        this.children = new ArrayList<>();
+        this.branches = new ArrayList<>();
     }
 
+    // Mendapatkan nama dari node
     public String getName() {
         return name;
     }
 
-    public List<TreeNode> getChildren() {
-        return children;
+    // Mendapatkan daftar cabang (children) dari node ini
+    public List<TreeNode> Branches() {
+        return branches;
     }
 
-    public void addChild(TreeNode child) {
-        children.add(child);
+    // Menambahkan cabang (child) baru ke node ini
+    public void addBranch(TreeNode branch) {
+        branches.add(branch);
     }
 
-    public TreeNode findChild(String name) {
-        for (TreeNode child : children) {
-            if (child.getName().equals(name)) {
-                return child;
+    // Mencari cabang (child) berdasarkan nama
+    public TreeNode findBranch(String name) {
+        for (TreeNode branch : branches) {
+            if (branch.getName().equals(name)) {
+                return branch; // Mengembalikan cabang yang ditemukan
             }
         }
-        return null;
+        return null; // Mengembalikan null jika tidak ditemukan
     }
 
-    // Add the removeChild method
-    public void removeChild(TreeNode child) {
-        children.remove(child);
+    // Menghapus cabang (child) tertentu dari node ini
+    public void removeBranch(TreeNode branch) {
+        branches.remove(branch);
+    }
+
+    // Menghapus semua cabang (children) dari node ini
+    public void clearBranches() {
+        branches.clear();
     }
 }
 
-
+// Kelas Utils menyediakan berbagai utilitas untuk pengelolaan tree dan interaksi pengguna
 class Utils {
 
-    private static final Scanner scanner = new Scanner(System.in);
+    private static final Scanner scanner = new Scanner(System.in); // Scanner untuk input pengguna
 
+    // Menampilkan struktur tree secara visual
     public static void printTree(TreeNode node, String indent, boolean isLast) {
         if (node == null) {
-            return;
+            return; // Tidak ada node untuk ditampilkan
         }
 
-        // Print the current node without prefix for root
+        // Menampilkan nama root atau cabang dengan indentasi yang sesuai
         if (indent.isEmpty()) {
-            System.out.println("[" + node.getName() + "]");  // Print the root node without any prefix
+            System.out.println("[" + node.getName() + "]");
         } else {
             String branch = isLast ? "└───" : "├───";
             System.out.println(indent + branch + node.getName());
         }
 
-        // Prepare the new indent for children
         indent += (isLast ? "    " : "│   ");
 
-        // Recurse for children
-        for (int i = 0; i < node.getChildren().size(); i++) {
-            boolean isLastChild = (i == node.getChildren().size() - 1);
-            printTree(node.getChildren().get(i), indent, isLastChild);
+        // Rekursif untuk menampilkan cabang berikutnya
+        for (int i = 0; i < node.Branches().size(); i++) {
+            boolean isLastBranch = (i == node.Branches().size() - 1);
+            printTree(node.Branches().get(i), indent, isLastBranch);
         }
     }
 
+    // Menambahkan node baru ke tree
     public static void addNode(TreeNode root, String[] parts) {
         TreeNode currentNode = root;
 
         for (String part : parts) {
-            TreeNode childNode = currentNode.findChild(part);
+            TreeNode branchNode = currentNode.findBranch(part);
 
-            if (childNode == null && !part.trim().isEmpty()) {
-                // Create new child node if it doesn't exist
-                childNode = new TreeNode(part);
-                currentNode.addChild(childNode);
+            if (branchNode == null && !part.trim().isEmpty()) {
+                branchNode = new TreeNode(part); // Membuat node baru jika tidak ditemukan
+                currentNode.addBranch(branchNode);
             }
-            // Move to the next level in the tree
-            currentNode = childNode;
+
+            currentNode = branchNode; // Berpindah ke node berikutnya
         }
     }
 
+    // Menghapus node dari tree berdasarkan path
     public static void deleteNode(TreeNode root, String[] parts) {
         if (parts.length == 0) return;
 
         TreeNode currentNode = root;
         for (int i = 0; i < parts.length - 1; i++) {
-            currentNode = currentNode.findChild(parts[i]);
+            currentNode = currentNode.findBranch(parts[i]);
             if (currentNode == null) {
-                System.out.println("Path not found: " + String.join(">", parts));
+                System.out.println("Path tidak ditemukan: " + String.join(">", parts));
                 return;
             }
         }
 
         String lastNodeName = parts[parts.length - 1];
-        TreeNode childToDelete = currentNode.findChild(lastNodeName);
-        if (childToDelete != null) {
-            currentNode.removeChild(childToDelete);
-            System.out.println("Node deleted: " + lastNodeName);
+        TreeNode branchToDelete = currentNode.findBranch(lastNodeName);
+        if (branchToDelete != null) {
+            currentNode.removeBranch(branchToDelete);
+            System.out.println("Node dihapus: " + lastNodeName);
         } else {
-            System.out.println("Node not found: " + lastNodeName);
+            System.out.println("Node tidak ditemukan: " + lastNodeName);
         }
     }
 
+    // Menghapus semua cabang dari node tertentu
+    public static void clearNode(TreeNode root, String[] parts) {
+        if (parts.length == 0) return;
 
+        TreeNode currentNode = root;
+        for (int i = 0; i < parts.length; i++) {
+            currentNode = currentNode.findBranch(parts[i]);
+            if (currentNode == null) {
+                System.out.println("Path tidak ditemukan: " + String.join(">", parts));
+                return;
+            }
+        }
 
+        currentNode.clearBranches(); // Menghapus semua cabang di dalam node
+        System.out.println("Semua cabang dihapus untuk: " + parts[parts.length - 1]);
+    }
+
+    // Menyimpan struktur tree ke dalam format flat file
     public static void saveTreeToFlatFile(TreeNode node, List<String> result, String path) {
-        // Build the current path
         String currentPath = path.isEmpty() ? node.getName() : path + ">" + node.getName();
 
-        // If the node has no children, save the path as a leaf
-        if (node.getChildren().isEmpty()) {
-            result.add(currentPath);
+        if (node.Branches().isEmpty()) {
+            result.add(currentPath); // Menambahkan path jika tidak ada cabang
         } else {
-            // If the node has children, recursively process them
-            for (TreeNode child : node.getChildren()) {
-                saveTreeToFlatFile(child, result, currentPath);
+            for (TreeNode branch : node.Branches()) {
+                saveTreeToFlatFile(branch, result, currentPath); // Rekursif untuk cabang berikutnya
             }
         }
     }
 
+    // Mendapatkan daftar file dengan ekstensi ".tree" di direktori tertentu
     public static String[] directory(File dir) {
         if (!dir.exists() || !dir.isDirectory()) {
-            return new String[0]; // Return empty array if the directory doesn't exist or is not valid
+            return new String[0]; // Mengembalikan array kosong jika direktori tidak valid
         }
 
         List<String> fileList = new ArrayList<>();
@@ -294,10 +341,10 @@ class Utils {
             }
         }
 
-        // Convert List to raw String array
-        return fileList.toArray(String[]::new);
+        return fileList.toArray(String[]::new); // Mengembalikan daftar file sebagai array
     }
 
+    // Membaca baris teks dari file
     public static List<String> readLinesFromFile(File file) {
         List<String> lines = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
@@ -306,42 +353,43 @@ class Utils {
                 lines.add(line);
             }
         } catch (IOException e) {
-            System.err.println("Error reading file: " + e.getMessage());
+            System.err.println("Kesalahan membaca file: " + e.getMessage());
         }
         return lines;
     }
 
+    // Menampilkan teks tanpa pindah baris
     public static void print(String text) {
         System.out.print(text);
     }
 
+    // Menampilkan teks dengan pindah baris
     public static void println(String text) {
         System.out.println(text);
     }
 
+    // Meminta input dari pengguna
     public static String input(String prompt) {
         print("└[" + prompt + "]> ");
         return scanner.nextLine();
     }
 
+    // Membersihkan layar
     public static void clear() {
-		try {
-			String osName = System.getProperty("os.name").toLowerCase();
-			if (osName.contains("windows")) {
-				// For Windows, use a workaround since 'cls' doesn't work directly in Java
-				new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-			} else {
-				// For Unix-based systems
-				new ProcessBuilder("clear").inheritIO().start().waitFor();
-			}
-		} catch (IOException | InterruptedException e) {
-			// Handle exceptions gracefully
-			System.out.println("Error clearing the screen: " + e.getMessage());
-		}
-	}
+        try {
+            String osName = System.getProperty("os.name").toLowerCase();
+            if (osName.contains("windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else {
+                new ProcessBuilder("clear").inheritIO().start().waitFor();
+            }
+        } catch (IOException | InterruptedException e) {
+            System.out.println("Kesalahan saat membersihkan layar: " + e.getMessage());
+        }
+    }
 
+    // Menampilkan banner aplikasi
     public static void banner(Boolean standalone) {
-
         println("┌──────── TREE STRUCTURE ────────┐");
         println("│████████ ██████  ███████ ███████│");
         println("│   ██    ██   ██ ██      ██     │");
@@ -353,13 +401,12 @@ class Utils {
         } else {
             println("├────────────────────────────────┤");
         }
-
     }
 
+    // Menampilkan menu interaktif
     public static void menu(String title, String[] menu) {
         int white_space;
         if (!"onlyMenu".equals(title)) {
-
             banner(false);
             white_space = 32 - title.length();
             print("│" + title);
@@ -372,17 +419,16 @@ class Utils {
             println("┌────────────────────────────────┐");
         }
 
-        // Print menu options
         for (int i = 0; i < menu.length; i++) {
             String menuItem;
             if (menu[i].contains(",")) {
-                if(menu[i].contains(",,")){
+                if (menu[i].contains(",,")) {
                     menuItem = menu[i].replace(",,", "");
                 } else {
                     menuItem = menu[i].split(",")[0] + ". " + menu[i].replace(menu[i].split(",")[0] + ",", "");
                 }
             } else {
-                menuItem = (i + 1) + ". " + menu[i].replace(".tree", "");
+                menuItem = (i + 1) + ". " + menu[i];
             }
             white_space = 32 - menuItem.length();
             print("│" + menuItem);
@@ -394,5 +440,4 @@ class Utils {
 
         println("├────────────────────────────────┘");
     }
-
 }
