@@ -1,5 +1,5 @@
 /*
- * Nama   : Surya Hadini Subagja
+ * Nama   : Surya Hadini .S
  * NPM    : 24552011357
  * Judul  : Tugas Besar UAS Algoritma & Pemrograman Semester 1
  * Materi : Sorting (Bubble Sort) & Searching (Sequential Search)
