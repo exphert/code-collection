@@ -71,6 +71,7 @@ void game2();
 
 int main(void)
 {
+
     title1();
 
     //=============== MENU ===================//
@@ -1006,7 +1007,7 @@ void game2()
     char name[50];
     char end_bug;
 
-    char player = (char)16;
+    char player = '>';
     char coin = '0';
     char enemy1 = 'x', enemy2 = 'x', enemy3 = 'x', enemy4 = 'x', enemy5 = 'x';
 
@@ -1211,7 +1212,7 @@ void game2()
         switch (move)
         {
         /*	UP	*/ case 72:
-            player = (char)30;
+            player = '^';
             dash = 0;
             if (yp - 1 > 2)
             {
@@ -1221,7 +1222,7 @@ void game2()
             }
             break;
         /* DOWN */ case 80:
-            player = (char)31;
+            player = 'v';
             dash = 1;
             if (yp + 1 < hm - 1)
             {
@@ -1231,7 +1232,7 @@ void game2()
             }
             break;
         /* LEFT */ case 75:
-            player = (char)17;
+            player = '<';
             dash = 2;
             if (xp - 1 > 4)
             {
@@ -1241,7 +1242,7 @@ void game2()
             }
             break;
         /* RIGHT */ case 77:
-            player = (char)16;
+            player = '>';
             dash = 3;
             if (xp + 1 < wm - 1)
             {
